@@ -16,7 +16,13 @@ def load_data():
         try:
             df = pd.read_excel(file_path)
             # Konversi kolom yang mungkin berupa angka (tapi terbaca sebagai teks) menjadi numerik
-            df = df.apply(lambda col: pd.to_numeric(col, errors='ignore'))
+            for col in df.columns:
+                df[col] = pd.to_numeric(df[col], errors='ignore')
+            
+            # Pastikan kolom tipe campuran diubah menjadi string agar tidak error di Streamlit (PyArrow)
+            for col in df.columns:
+                if df[col].dtype == 'object':
+                    df[col] = df[col].astype(str)
             return df
         except Exception as e:
             st.error(f"Error reading file: {e}")
