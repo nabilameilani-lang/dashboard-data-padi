@@ -15,6 +15,8 @@ def load_data():
     if os.path.exists(file_path):
         try:
             df = pd.read_excel(file_path)
+            # Konversi kolom yang mungkin berupa angka (tapi terbaca sebagai teks) menjadi numerik
+            df = df.apply(lambda col: pd.to_numeric(col, errors='ignore'))
             return df
         except Exception as e:
             st.error(f"Error reading file: {e}")
